@@ -21,9 +21,8 @@
             android:id="@+id/webViewTrailer"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
-        <!-- Poster Image (Fallback) -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/posterImage"
             android:layout_width="match_parent"
@@ -31,41 +30,35 @@
             android:scaleType="fitCenter"
             android:visibility="gone" />
 
-        <!-- Title -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/titleText"
             style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold" />
 
-        <!-- Synopsis -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/synopsisText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Genres -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/genreText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic" />
 
-        <!-- Main Cast -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/castText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Episodes -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/episodesText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Rating -->
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/ratingText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
