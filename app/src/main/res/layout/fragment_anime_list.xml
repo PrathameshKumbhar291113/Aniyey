@@ -16,9 +16,9 @@
         android:paddingHorizontal="4dp"
         android:paddingVertical="8dp"
         android:text="Aniyey"
-        android:textSize="28dp"
-        android:textStyle="bold"
         android:textColor="@color/white"
+        android:textSize="35dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,5 +34,17 @@
         app:layout_constraintTop_toBottomOf="@id/toolBar"
         app:spanCount="2"
         tools:listitem="@layout/item_anime_card" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progressTint="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

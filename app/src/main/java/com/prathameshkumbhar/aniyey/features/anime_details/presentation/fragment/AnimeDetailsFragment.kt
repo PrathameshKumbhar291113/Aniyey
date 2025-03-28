@@ -2,19 +2,27 @@ package com.prathameshkumbhar.aniyey.features.anime_details.presentation.fragmen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.activity.OnBackPressedCallback
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import coil.load
+import com.prathameshkumbhar.aniyey.R
 import com.prathameshkumbhar.aniyey.connection.models.GetAnimeDetailsByIdResponse
 import com.prathameshkumbhar.aniyey.databinding.FragmentAnimeDetailsBinding
+import com.prathameshkumbhar.aniyey.features.anime_details.presentation.manager.hideProgressBarAndShowAnimeDetailsContainer
+import com.prathameshkumbhar.aniyey.features.anime_details.presentation.manager.hideTrailerAndShowPoster
+import com.prathameshkumbhar.aniyey.features.anime_details.presentation.manager.showProgressBarAndHideAnimeDetailsContainer
+import com.prathameshkumbhar.aniyey.features.anime_details.presentation.manager.showTrailerAndHidePoster
 import com.prathameshkumbhar.aniyey.features.anime_details.presentation.viewmodel.AnimeDetailsViewModel
 import com.prathameshkumbhar.aniyey.utils.NetworkResponseCodes
 import com.prathameshkumbhar.aniyey.utils.NetworkResult
@@ -24,7 +32,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class AnimeDetailsFragment : Fragment() {
     private lateinit var binding: FragmentAnimeDetailsBinding
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
-    private var player: ExoPlayer? = null
+    private val navController: NavController by lazy {
+        findNavController()
+    }
 
     companion object {
         const val ANIME_ID: String = "animeId"
@@ -50,6 +60,7 @@ class AnimeDetailsFragment : Fragment() {
         setupUi()
         setupObserver()
         getArgumentFromAnimeListScreen()
+        handleBackPress()
     }
 
     private fun getArgumentFromAnimeListScreen() {
@@ -58,15 +69,16 @@ class AnimeDetailsFragment : Fragment() {
 
 
     private fun setupUi() {
-
+        binding.showProgressBarAndHideAnimeDetailsContainer()
     }
 
     private fun setupObserver() {
         with(animeDetailsViewModel) {
+
             isNetworkAvailable.observe(viewLifecycleOwner) {
                 when (it) {
                     true -> {
-                        getAnimeDetailsById()
+                        //Do nothing
                     }
 
                     false -> {
@@ -85,16 +97,19 @@ class AnimeDetailsFragment : Fragment() {
                 }
             }
 
+            animeId.observe(viewLifecycleOwner) {
+                it?.let { animeId ->
+                    getAnimeDetailsById(animeId)
+                }
+            }
+
             animeDetails.observe(viewLifecycleOwner) {
                 when (it) {
                     is NetworkResult.Loading -> {}
                     is NetworkResult.Success -> {
+                        binding.hideProgressBarAndShowAnimeDetailsContainer()
                         when (it.data?.code()) {
                             NetworkResponseCodes.SUCCESS_RESPONSE_CODE_200 -> {
-                                Log.e(
-                                    "ANIME_DETAILS",
-                                    "setupObserver: ${it.data.body()?.data.toString()}",
-                                )
                                 it.data.body()?.data?.let { animeDetails ->
                                     bindAnimeDetails(animeDetails)
                                 }
@@ -105,7 +120,14 @@ class AnimeDetailsFragment : Fragment() {
                         }
                     }
 
-                    is NetworkResult.Error -> {}
+                    is NetworkResult.Error -> {
+                        Log.e(
+                            "AnimeListFragment",
+                            "AnimeListFragment: ${it.message.toString()}"
+                        )
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -113,22 +135,54 @@ class AnimeDetailsFragment : Fragment() {
     }
 
     private fun bindAnimeDetails(anime: GetAnimeDetailsByIdResponse.Data) {
-        binding.titleText.text = anime.title
-        binding.synopsisText.text = anime.synopsis
-        binding.genreText.text = anime.genres?.joinToString(", ")
-        binding.castText.text = anime.broadcast.toString()
-        binding.episodesText.text = "Episodes: ${anime.episodes}"
-        binding.ratingText.text = "Rating: ${anime.rating}"
 
-        if (anime.trailer?.embedUrl != null) {
+        binding.titleText.text = Html.fromHtml(
+            requireContext().getString(
+                R.string.anime_title,
+                anime.title.toString()
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        binding.synopsisText.text = Html.fromHtml(
+            requireContext().getString(
+                R.string.anime_synopsis,
+                anime.synopsis.toString()
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+
+        binding.genreText.text = Html.fromHtml(
+            requireContext().getString(
+                R.string.anime_genres,
+                anime.genres?.filterNotNull()
+                    ?.joinToString(", ") { it.name.toString() } ?: "No Genres Available"
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+
+        binding.episodesText.text = Html.fromHtml(
+            requireContext().getString(
+                R.string.anime_episodes,
+                anime.episodes.toString()
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+
+        binding.ratingText.text = Html.fromHtml(
+            requireContext().getString(
+                R.string.anime_rating,
+                anime.rating.toString()
+            ),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+
+        if (anime.trailer?.embedUrl?.isNotEmpty() == true) {
             showTrailer(anime.trailer?.embedUrl)
         } else {
             anime.images?.jpg?.largeImageUrl?.let {
                 binding.posterImage.load(it)
             }
-
-            binding.webViewTrailer.isVisible = false
-            binding.posterImage.isVisible = true
+            binding.hideTrailerAndShowPoster()
         }
     }
 
@@ -136,12 +190,25 @@ class AnimeDetailsFragment : Fragment() {
     private fun showTrailer(url: String?) {
         binding.webViewTrailer.apply {
             settings.javaScriptEnabled = true
+            settings.mediaPlaybackRequiresUserGesture = false
             webViewClient = WebViewClient()
             url?.let { embeddedUrl ->
                 loadUrl(embeddedUrl)
             }
         }
-        binding.webViewTrailer.isVisible = true
-        binding.posterImage.isVisible = false
+        binding.showTrailerAndHidePoster()
     }
+
+    private fun handleBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    animeDetailsViewModel.clearAnimeDetails()
+                    binding.hideProgressBarAndShowAnimeDetailsContainer()
+                    navController.popBackStack()
+                }
+            })
+    }
+
 }

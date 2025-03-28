@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Aniyey</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="anime_title"><![CDATA["<font color="#F64444"><b>Title<b>:</font> %s "]]></string>
+    <string name="anime_synopsis"><![CDATA["<font color="#F64444"><b>Synopsis<b>:</font> %s"]]></string>
+    <string name="anime_genres"><![CDATA["<font color="#F64444"><b>Genre<b>:</font> <i>%s</i>"]]></string>
+    <string name="anime_episodes"><![CDATA["<font color="#F64444"><b>Episodes<b>:</font> %s"]]></string>
+    <string name="anime_rating"><![CDATA["<font color="#F64444"><b>Rating<b>:</font> %s"]]></string>
 </resources>

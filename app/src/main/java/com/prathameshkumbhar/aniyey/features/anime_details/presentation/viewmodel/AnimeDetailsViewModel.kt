@@ -19,24 +19,27 @@ class AnimeDetailsViewModel @Inject constructor(
     private val networkMonitor: NetworkMonitorService,
     private val getAnimeDetailsUseCase: GetAnimeDetailsUseCase
 ) : ViewModel() {
-    private val _animeId = MutableLiveData<Int>()
+    private val _animeId = MutableLiveData<Int?>()
+    val animeId: LiveData<Int?> get() = _animeId
+
     val isNetworkAvailable: LiveData<Boolean> = networkMonitor.isNetworkAvailable
     private val _animeDetails =
-        MutableLiveData<NetworkResult<Response<GetAnimeDetailsByIdResponse>>>()
-    val animeDetails: LiveData<NetworkResult<Response<GetAnimeDetailsByIdResponse>>> get() = _animeDetails
+        MutableLiveData<NetworkResult<Response<GetAnimeDetailsByIdResponse>>?>()
+    val animeDetails: LiveData<NetworkResult<Response<GetAnimeDetailsByIdResponse>>?> get() = _animeDetails
 
 
     fun setAnimeId(animeId: Int) {
         _animeId.value = animeId
     }
 
-    fun getAnimeDetailsById() {
-        _animeId.value?.let { animeId ->
-            getAnimeDetailsUseCase(animeId).onEach {
-                _animeDetails.postValue(it)
-            }.launchIn(viewModelScope)
-        }
+    fun getAnimeDetailsById(animeId: Int) {
+        getAnimeDetailsUseCase(animeId).onEach {
+            _animeDetails.postValue(it)
+        }.launchIn(viewModelScope)
+    }
 
+    fun clearAnimeDetails(){
+        _animeDetails.postValue(null)
     }
 
 
