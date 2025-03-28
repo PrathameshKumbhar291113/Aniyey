@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".features.anime_details.presentation.fragment.AnimeDetailsFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/animeDetailsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <WebView
+            android:id="@+id/webViewTrailer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+
+        <!-- Poster Image (Fallback) -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/posterImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <!-- Synopsis -->
+        <TextView
+            android:id="@+id/synopsisText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Genres -->
+        <TextView
+            android:id="@+id/genreText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic" />
+
+        <!-- Main Cast -->
+        <TextView
+            android:id="@+id/castText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Episodes -->
+        <TextView
+            android:id="@+id/episodesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Rating -->
+        <TextView
+            android:id="@+id/ratingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

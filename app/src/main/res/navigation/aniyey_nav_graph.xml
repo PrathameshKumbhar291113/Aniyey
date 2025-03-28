@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/aniyey_nav_graph"
+    app:startDestination="@id/animeListFragment">
+
+    <fragment
+        android:id="@+id/animeListFragment"
+        android:name="com.prathameshkumbhar.aniyey.features.anime_list.presentation.fragment.AnimeListFragment"
+        android:label="fragment_anime_list"
+        tools:layout="@layout/fragment_anime_list">
+        <action
+            android:id="@+id/action_animeListFragment_to_animeDetailsFragment"
+            app:destination="@id/animeDetailsFragment" />
+        <argument
+            android:name="animeId"
+            app:argType="integer"
+            app:nullable="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/animeDetailsFragment"
+        android:name="com.prathameshkumbhar.aniyey.features.anime_details.presentation.fragment.AnimeDetailsFragment"
+        android:label="fragment_anime_details"
+        tools:layout="@layout/fragment_anime_details" />
+</navigation>

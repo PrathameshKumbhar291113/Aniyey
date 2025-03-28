@@ -1,0 +1,9 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Aniyey" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+
+    <style name="Theme.Aniyey" parent="Base.Theme.Aniyey" />
+</resources>
