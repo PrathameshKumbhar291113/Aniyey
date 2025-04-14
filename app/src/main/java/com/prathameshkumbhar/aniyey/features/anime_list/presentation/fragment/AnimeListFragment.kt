@@ -57,7 +57,10 @@ class AnimeListFragment : Fragment() {
     }
 
     private fun setupUi() {
-
+        binding.sortButton.setOnClickListener {
+            animeListViewModel.toggleSortOrder()
+            animeListAdapter.refresh()
+        }
     }
 
     private fun setupObserver() {

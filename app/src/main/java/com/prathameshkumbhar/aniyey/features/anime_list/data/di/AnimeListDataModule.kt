@@ -17,6 +17,6 @@ object AnimeListDataModule {
     fun providesAnimeListRepository(
         apiCommunicator: ApiCommunicator
     ): AnimeListRepository {
-        return AnimeListRepoImpl(apiCommunicator)
+        return AnimeListRepoImpl(apiCommunicator, )
     }
 }
